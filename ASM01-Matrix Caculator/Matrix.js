@@ -70,12 +70,4 @@ function calcul(){
                 l++;
             }
         }
-
-       /*for(var i = 0; i<4; i++) 
-        {
-            for(var j = 0; j<4; j++)
-            {
-               document.write(rarray[i][j]);
-            }
-        }*/
     }
