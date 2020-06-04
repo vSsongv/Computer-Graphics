@@ -28,134 +28,77 @@ function initialiseGL(canvas) {
 
 var shaderProgram;
 
-var vertexData = [];
-var sx = 0.8;
-var sy = 0.8;
-var sz = 0.8;
-var p = 0.7;
-
 function creatPos(sx, sy, sz, p)
 {
-    
+    var vertexData = [
 
-    vertexData = [
+        -sx/2, -sy/2, -sz/2, 0.4, 1.0, 1.0, p, 1.0 ,1.0,
+        -sx/2, sy/2, -sz/2, 0.2, 0.5, 1.0, p, 1.0 ,1.0,
+        sx/2, sy/2, -sz/2, 0.3, 0.7, 1.0, p, 1.0 ,1.0, //하늘(뒤)
+        -sx/2, -sy/2, -sz/2, 0.6, 0.8, 0.3, p, 1.0 ,1.0,
+        sx/2, -sy/2, -sz/2, 0.9, 0.2, 0.0, p, 1.0 ,1.0,
+        sx/2, sy/2, -sz/2, 0.6, 1.0, 0.3, p, 1.0 ,1.0,//하늘(뒤)
 
-        -sx/2, -sy/2, -sz/2, 0.6, 0.8, 0.3, p,
-        sx/2, sy/2, -sz/2, 0.6, 1.0, 0.3, p,
-        sx/2, -sy/2, -sz/2, 0.9, 0.2, 0.0, p, //하늘(뒤)
+        sx/2, sy/2, -sz/2, 0.9, 0.4, 1.0, p, 1.0 ,1.0,
+        sx/2, -sy/2, sz/2, 0.8, 1.0, 1.0, p, 1.0 ,1.0,
+        sx/2, -sy/2, -sz/2, 0.8, 0.5, 1.0, p, 1.0 ,1.0, //보라(오른)
+        sx/2, sy/2, -sz/2, 0.2, 0.4, 1.0, p, 1.0 ,1.0,
+        sx/2, sy/2, sz/2, 0.2, 0.4, 1.0, p, 1.0 ,1.0, //보라(오른)
+        sx/2, -sy/2, sz/2, 0.1, 0.1, 1.0, p, 1.0 ,1.0,
 
-        -sx/2, -sy/2, -sz/2, 0.4, 1.0, 1.0, p,
-        -sx/2, sy/2, -sz/2, 0.2, 0.5, 1.0, p,
-        sx/2, sy/2, -sz/2, 0.3, 0.7, 1.0, p, //하늘(뒤)
+        -sx/2, sy/2, -sz/2, 1.0, 0.0, 0.3, p, 1.0 ,1.0,
+        sx/2, sy/2, sz/2, 1.0, 0.3, 0.3, p, 1.0 ,1.0,
+        sx/2, sy/2, -sz/2, 1.0, 0.0, 0.3, p, 1.0 ,1.0, //노란(위)
+        -sx/2, sy/2, sz/2, 0.2, 1.0, 0.3, p, 1.0 ,1.0,
+        sx/2, sy/2, sz/2, 0.8, 0.2, 0.3, p, 1.0 ,1.0,
+        -sx/2, sy/2, -sz/2, 0.4, 0.9, 0.3, p, 1.0 ,1.0,//노란(위)
 
-        sx/2, -sy/2, -sz/2, 0.9, 0.4, 1.0, p,
-        sx/2, sy/2, sz/2, 0.8, 1.0, 1.0, p,
-        sx/2, sy/2, -sz/2, 0.8, 0.5, 1.0, p, //보라(오른)
+        -sx/2, -sy/2, -sz/2, 0.6, 0.3, 0.2, p, 1.0 ,1.0,
+        -sx/2, sy/2, -sz/2, 0.2, 1.0, 0.1, p, 1.0 ,1.0,
+        -sx/2, -sy/2, sz/2, 0.1, 0.5, 0.9, p, 1.0 ,1.0, //흰색(왼)
+        -sx/2, sy/2, sz/2, 0.1, 0.7, 0.6, p, 1.0 ,1.0,
+        -sx/2, sy/2, -sz/2, 0.9, 0.3, 0.3, p, 1.0 ,1.0,
+        -sx/2, -sy/2, sz/2, 0.9, 0.3, 0.2, p, 1.0 ,1.0, //흰색(왼)
 
-        sx/2, -sy/2, -sz/2, 0.2, 0.4, 1.0, p,
-        sx/2, -sy/2, sz/2, 0.1, 0.1, 1.0, p,
-        sx/2, sy/2, sz/2, 0.2, 0.4, 1.0, p, //보라(오른)
-      
-        -sx/2, -sy/2, -sz/2, 0.6, 0.3, 0.2, p,
-        -sx/2, sy/2, sz/2, 0.2, 1.0, 0.1, p,
-        -sx/2, sy/2, -sz/2, 0.1, 0.5, 0.9, p, //흰색(왼)
+        -sx/2, -sy/2, -sz/2, 0.4, 0.1, 1.0, p, 1.0 ,1.0,
+        sx/2, -sy/2, -sz/2, 0.1, 0.3, 0.7, p, 1.0 ,1.0,
+        sx/2, -sy/2, sz/2, 0.7, 0.9, 0.1, p, 1.0 ,1.0, //연두(아래)
+        -sx/2, -sy/2, -sz/2, p, 0.2, 1.0, 0.7, 1.0 ,1.0,
+        -sx/2, -sy/2, sz/2, 0.2, 0.9, 0.7, p, 1.0 ,1.0,
+        sx/2, -sy/2, sz/2, 0.1, 1.0, 0.7, p, 1.0 ,1.0, //연두(아래)   
 
-        -sx/2, -sy/2, -sz/2, 0.9, 0.3, 0.2, p,
-        -sx/2, -sy/2, sz/2, 0.1, 0.7, 0.6, p,
-        -sx/2, sy/2, sz/2, 0.9, 0.3, 0.3, p, //흰색(왼)
- 
-        -sx/2, -sy/2, -sz/2, 0.4, 0.1, 1.0, p,
-        sx/2, -sy/2, sz/2, 0.1, 0.3, 0.7, p,
-        sx/2, -sy/2, -sz/2, 0.7, 0.9, 0.1, p, //연두(아래)
-
-        -sx/2, -sy/2, -sz/2, p, 0.2, 1.0, 0.7,
-        -sx/2, -sy/2, sz/2, 0.2, 0.9, 0.7, p,
-        sx/2, -sy/2, sz/2, 0.1, 1.0, 0.7, p, //연두(아래)   
-        
-        -sx/2, -sy/2, sz/2, 0.7, 0.5, 0.2, p,
-        sx/2, sy/2, sz/2, 1.0, 0.0, 1.0, p,
-        sx/2, -sy/2, sz/2, 0.9, 0.2, 0.7, p, //핑크(앞)
-
-        -sx/2, -sy/2, sz/2, 1.0, 0.3, 1.0, p,
-        -sx/2, sy/2, sz/2, 0.8, 0.9, 1.0, p,
-        sx/2, sy/2, sz/2, 0.0, 0.5, 1.0, p, //핑크(앞)
-   
-         -sx/2, sy/2, -sz/2, 0.2, 1.0, 0.3, p,
-         sx/2, sy/2, sz/2, 0.8, 0.2, 0.3, p,
-         sx/2, sy/2, -sz/2, 0.4, 0.9, 0.3, p, //노란(위)
-
-         -sx/2, sy/2, -sz/2, 1.0, 0.0, 0.3, p,
-         -sx/2, sy/2, sz/2, 1.0, 0.3, 0.3, p,
-         sx/2, sy/2, sz/2, 1.0, 0.0, 0.3, p //노란(위)
+        -sx/2, -sy/2, sz/2, 0.7, 0.5, 0.2, p, 1.0 ,1.0,
+        sx/2, sy/2, sz/2, 1.0, 0.0, 1.0, p, 1.0 ,1.0,
+        sx/2, -sy/2, sz/2, 0.9, 0.2, 0.7, p, 1.0 ,1.0, //핑크(앞)
+        -sx/2, -sy/2, sz/2, 1.0, 0.3, 1.0, p, 1.0 ,1.0,
+        -sx/2, sy/2, sz/2, 0.8, 0.9, 1.0, p, 1.0 ,1.0,
+        sx/2, sy/2, sz/2, 0.0, 0.5, 1.0, p, 1.0 ,1.0, //핑크(앞)
 
     ];
     
     return vertexData;
 }
 
-// var vertexData = [
-// 		// Backface (RED/WHITE) -> z = 0.5
-//         -0.5, -0.5, -0.5,  1.0, 0.0, 0.0, 1.0,  0.0,  0.0,  
-//          0.5,  0.5, -0.5,  1.0, 0.0, 0.0, 1.0,  1.0,  1.0, 
-//          0.5, -0.5, -0.5,  1.0, 0.0, 0.0, 1.0,  1.0, -0.0,
-//         -0.5, -0.5, -0.5,  1.0, 0.0, 0.0, 1.0, -0.0, -0.0, 
-//         -0.5,  0.5, -0.5,  1.0, 0.0, 0.0, 1.0, -0.0,  1.0, 
-//          0.5,  0.5, -0.5,  1.0, 1.0, 1.0, 1.0,  1.0,  1.0,  
-// 		// Front (BLUE/WHITE) -> z = 0.5      
-//         -0.5, -0.5,  0.5,  0.0, 0.0, 1.0, 1.0, -0.0, -0.0, 
-//          0.5,  0.5,  0.5,  0.0, 0.0, 1.0, 1.0,  1.0,  1.0, 
-//          0.5, -0.5,  0.5,  0.0, 0.0, 1.0, 1.0,  1.0, -0.0, 
-//         -0.5, -0.5,  0.5,  0.0, 0.0, 1.0, 1.0, -0.0, -0.0, 
-//         -0.5,  0.5,  0.5,  0.0, 0.0, 1.0, 1.0, -0.0,  1.0, 
-//          0.5,  0.5,  0.5,  1.0, 1.0, 1.0, 1.0,  1.0,  1.0,  
-// 		// LEFT (GREEN/WHITE) -> z = 0.5     
-//         -0.5, -0.5, -0.5,  0.0, 1.0, 0.0, 1.0, -0.0, -0.0, 
-//         -0.5,  0.5,  0.5,  0.0, 1.0, 0.0, 1.0,  1.0,  1.0, 
-//         -0.5,  0.5, -0.5,  0.0, 1.0, 0.0, 1.0,  1.0,  0.0, 
-//         -0.5, -0.5, -0.5,  0.0, 1.0, 0.0, 1.0, -0.0, -0.0, 
-//         -0.5, -0.5,  0.5,  0.0, 1.0, 0.0, 1.0, -0.0,  1.0, 
-//         -0.5,  0.5,  0.5,  0.0, 1.0, 1.0, 1.0,  1.0,  1.0,  
-// 		// RIGHT (YELLOE/WHITE) -> z = 0.5    
-//          0.5, -0.5, -0.5,  1.0, 1.0, 0.0, 1.0, -0.0, -0.0, 
-//          0.5,  0.5,  0.5,  1.0, 1.0, 0.0, 1.0,  1.0,  1.0, 
-//          0.5,  0.5, -0.5,  1.0, 1.0, 0.0, 1.0,  1.0,  0.0, 
-//          0.5, -0.5, -0.5,  1.0, 1.0, 0.0, 1.0, -0.0, -0.0, 
-//          0.5, -0.5,  0.5,  1.0, 1.0, 0.0, 1.0, -0.0,  1.0, 
-//          0.5,  0.5,  0.5,  1.0, 1.0, 1.0, 1.0,  1.0,  1.0,  
-// 		// BOTTON (MAGENTA/WHITE) -> z = 0.5 
-//         -0.5, -0.5, -0.5,  1.0, 0.0, 1.0, 1.0, -0.0, -0.0, 
-//          0.5, -0.5,  0.5,  1.0, 0.0, 1.0, 1.0,  1.0,  1.0, 
-//          0.5, -0.5, -0.5,  1.0, 0.0, 1.0, 1.0,  1.0,  0.0, 
-//         -0.5, -0.5, -0.5,  1.0, 0.0, 1.0, 1.0, -0.0, -0.0, 
-//         -0.5, -0.5,  0.5,  1.0, 0.0, 1.0, 1.0, -0.0,  1.0, 
-//          0.5, -0.5,  0.5,  1.0, 1.0, 1.0, 1.0,  1.0,  1.0,  
-// 		// TOP (CYAN/WHITE) -> z = 0.5       
-//         -0.5,  0.5, -0.5,  0.0, 1.0, 1.0, 1.0, -0.0, -0.0, 
-//          0.5,  0.5,  0.5,  0.0, 1.0, 1.0, 1.0,  1.0,  1.0, 
-//          0.5,  0.5, -0.5,  0.0, 1.0, 1.0, 1.0,  1.0,  0.0, 
-//         -0.5,  0.5, -0.5,  0.0, 1.0, 1.0, 1.0, -0.0, -0.0, 
-//         -0.5,  0.5,  0.5,  0.0, 1.0, 1.0, 1.0, -0.0,  1.0, 
-//          0.5,  0.5,  0.5,  1.0, 1.0, 1.0, 1.0,  1.0,  1.0 
-// ];
-
 function initialiseBuffer() {
 
     gl.vertexBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, gl.vertexBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(creatPos(sx,sy, sz, p)), gl.STATIC_DRAW);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(creatPos(0.8, 0.8, 0.8, 0.7)), gl.STATIC_DRAW);
 
 	var texture = gl.createTexture(); 
 	gl.bindTexture(gl.TEXTURE_2D, texture); 
 	// Fill the texture with a 1x1 red pixel.
-	/*const texData = new Uint8Array([255, 0, 0, 255, 0, 255, 0, 255, 0, 0, 255, 255, 255, 255, 0, 255]);
+    /*
+    const texData = new Uint8Array([255, 0, 0, 255, 0, 255, 0, 255, 0, 0, 255, 255, 255, 255, 0, 255]);
 	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 2, 2, 0, gl.RGBA, gl.UNSIGNED_BYTE, texData); 
 	//gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST_MIPMAP_NEAREST); // It is default
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.MIRRORED_REPEAT);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.MIRRORED_REPEAT);
-    // Asynchronously load an image 
-	*/
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+    */
+    //Asynchronously load an image 
+	
 	var image = new Image();
 	image.src = "Ssong_image.jpg";
 	image.addEventListener('load', function() {
@@ -176,7 +119,7 @@ function initialiseShaders() {
 			uniform sampler2D sampler2d;\
 			void main(void) \
 			{ \
-				gl_FragColor = 0.0 * color + 0.5 * texture2D(sampler2d, texCoord); \
+				gl_FragColor = 0.0 * color + 1.0 * texture2D(sampler2d, texCoord); \
 			}';
 
     gl.fragShader = gl.createShader(gl.FRAGMENT_SHADER);
