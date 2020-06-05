@@ -12,7 +12,8 @@ function testGLError(functionLastCalled) {
 
 function initialiseGL(canvas) {
     try {
-         gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+        // Try to grab the standard context. If it fails, fallback to experimental
+        gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
         gl.viewport(0, 0, canvas.width, canvas.height);
     }
     catch (e) {
@@ -27,75 +28,85 @@ function initialiseGL(canvas) {
 
 var shaderProgram;
 
-function creatPos(sx, sy, sz, p)
-{
-    var vertexData = [
-
-        -sx/2, -sy/2, -sz/2, 0.4, 1.0, 1.0, p, 1.0 ,1.0,
-        -sx/2, sy/2, -sz/2, 0.2, 0.5, 1.0, p, 1.0 ,1.0,
-        sx/2, sy/2, -sz/2, 0.3, 0.7, 1.0, p, 1.0 ,1.0, //하늘(뒤)
-        -sx/2, -sy/2, -sz/2, 0.6, 0.8, 0.3, p, 1.0 ,1.0,
-        sx/2, -sy/2, -sz/2, 0.9, 0.2, 0.0, p, 1.0 ,1.0,
-        sx/2, sy/2, -sz/2, 0.6, 1.0, 0.3, p, 1.0 ,1.0,//하늘(뒤)
-
-        sx/2, sy/2, -sz/2, 0.9, 0.4, 1.0, p, 1.0 ,1.0,
-        sx/2, -sy/2, sz/2, 0.8, 1.0, 1.0, p, 1.0 ,1.0,
-        sx/2, -sy/2, -sz/2, 0.8, 0.5, 1.0, p, 1.0 ,1.0, //보라(오른)
-        sx/2, sy/2, -sz/2, 0.2, 0.4, 1.0, p, 1.0 ,1.0,
-        sx/2, sy/2, sz/2, 0.2, 0.4, 1.0, p, 1.0 ,1.0, //보라(오른)
-        sx/2, -sy/2, sz/2, 0.1, 0.1, 1.0, p, 1.0 ,1.0,
-
-        -sx/2, sy/2, -sz/2, 1.0, 0.0, 0.3, p, 1.0 ,1.0,
-        sx/2, sy/2, sz/2, 1.0, 0.3, 0.3, p, 1.0 ,1.0,
-        sx/2, sy/2, -sz/2, 1.0, 0.0, 0.3, p, 1.0 ,1.0, //노란(위)
-        -sx/2, sy/2, sz/2, 0.2, 1.0, 0.3, p, 1.0 ,1.0,
-        sx/2, sy/2, sz/2, 0.8, 0.2, 0.3, p, 1.0 ,1.0,
-        -sx/2, sy/2, -sz/2, 0.4, 0.9, 0.3, p, 1.0 ,1.0,//노란(위)
-
-        -sx/2, -sy/2, -sz/2, 0.6, 0.3, 0.2, p, 1.0 ,1.0,
-        -sx/2, sy/2, -sz/2, 0.2, 1.0, 0.1, p, 1.0 ,1.0,
-        -sx/2, -sy/2, sz/2, 0.1, 0.5, 0.9, p, 1.0 ,1.0, //흰색(왼)
-        -sx/2, sy/2, sz/2, 0.1, 0.7, 0.6, p, 1.0 ,1.0,
-        -sx/2, sy/2, -sz/2, 0.9, 0.3, 0.3, p, 1.0 ,1.0,
-        -sx/2, -sy/2, sz/2, 0.9, 0.3, 0.2, p, 1.0 ,1.0, //흰색(왼)
-
-        -sx/2, -sy/2, -sz/2, 0.4, 0.1, 1.0, p, 1.0 ,1.0,
-        sx/2, -sy/2, -sz/2, 0.1, 0.3, 0.7, p, 1.0 ,1.0,
-        sx/2, -sy/2, sz/2, 0.7, 0.9, 0.1, p, 1.0 ,1.0, //연두(아래)
-        -sx/2, -sy/2, -sz/2, p, 0.2, 1.0, 0.7, 1.0 ,1.0,
-        -sx/2, -sy/2, sz/2, 0.2, 0.9, 0.7, p, 1.0 ,1.0,
-        sx/2, -sy/2, sz/2, 0.1, 1.0, 0.7, p, 1.0 ,1.0, //연두(아래)   
-
-        -sx/2, -sy/2, sz/2, 0.7, 0.5, 0.2, p, 1.0 ,1.0,
-        sx/2, sy/2, sz/2, 1.0, 0.0, 1.0, p, 1.0 ,1.0,
-        sx/2, -sy/2, sz/2, 0.9, 0.2, 0.7, p, 1.0 ,1.0, //핑크(앞)
-        -sx/2, -sy/2, sz/2, 1.0, 0.3, 1.0, p, 1.0 ,1.0,
-        -sx/2, sy/2, sz/2, 0.8, 0.9, 1.0, p, 1.0 ,1.0,
-        sx/2, sy/2, sz/2, 0.0, 0.5, 1.0, p, 1.0 ,1.0, //핑크(앞)
-
-    ];
-    
-    return vertexData;
-}
+    var sx = 1.0;
+    var sy = 1.0;
+    var sz = 1.0
+    var p = 1.0;
+function createPos(sx, sy, sz, p)
+   { var vertexData = [
+		
+        -sx/2, -sy/2, -sz/2, 0.4, 1.0, 1.0, p,  0.0,  0.0,  
+        sx/2,  sy/2, -sz/2, 0.2, 0.5, 1.0, p,  1.0,  1.0, 
+         sx/2, -sy/2, -sz/2, 0.3, 0.7, 1.0, p,  1.0, -0.0,
+        -sx/2, -sy/2, -sz/2, 0.6, 0.8, 0.3, p, -0.0, -0.0, 
+        -sx/2,  sy/2, -sz/2, 0.9, 0.2, 0.0, p, -0.0,  1.0, 
+         sx/2,  sy/2, -sz/2, 0.6, 1.0, 0.3, p,  1.0,  1.0,  //하늘(뒤)
+      
+        -sx/2, -sy/2,  sz/2, 0.7, 0.5, 0.2, p, -0.0, -0.0, 
+         sx/2,  sy/2,  sz/2, 1.0, 0.0, 1.0, p, 1.0,  1.0, 
+         sx/2, -sy/2,  sz/2, 0.9, 0.2, 0.7, p, 1.0, -0.0, 
+        -sx/2, -sy/2,  sz/2, 1.0, 0.3, 1.0, p, -0.0, -0.0, 
+        -sx/2,  sy/2,  sz/2, 0.8, 0.9, 1.0, p, -0.0,  1.0, 
+         sx/2,  sy/2,  sz/2, 0.0, 0.5, 1.0, p, 1.0,  1.0,  //핑크(앞)  
+   
+        -sx/2, -sy/2, -sz/2, 0.6, 0.3, 0.2, p, -0.0, -0.0, 
+        -sx/2,  sy/2,  sz/2, 0.2, 1.0, 0.1, p, 1.0,  1.0, 
+        -sx/2,  sy/2, -sz/2, 0.1, 0.5, 0.9, p, 1.0,  0.0, 
+        -sx/2, -sy/2, -sz/2, 0.1, 0.7, 0.6, p, -0.0, -0.0, 
+        -sx/2, -sy/2,  sz/2, 0.9, 0.3, 0.3, p, -0.0,  1.0, 
+        -sx/2,  sy/2,  sz/2, 0.9, 0.3, 0.2, p, 1.0,  1.0,  //흰색(왼)
+		   
+         sx/2, -sy/2, -sz/2, 0.9, 0.4, 1.0, p, -0.0, -0.0, 
+         sx/2,  sy/2,  sz/2, 0.8, 1.0, 1.0, p, 1.0,  1.0, 
+         sx/2,  sy/2, -sz/2, 0.8, 0.5, 1.0, p, 1.0,  0.0, 
+         sx/2, -sy/2, -sz/2, 0.2, 0.5, 1.0, p, -0.0, -0.0, 
+         sx/2, -sy/2,  sz/2, 0.2, 0.4, 1.0, p, -0.0,  1.0, 
+         sx/2,  sy/2,  sz/2, 0.1, 0.1, 1.0, p, 1.0,  1.0,  //보라(오른)
+		 
+        -sx/2, -sy/2, -sz/2, 0.1, 0.1, 1.0, p, -0.0, -0.0, 
+         sx/2, -sy/2,  sz/2, 1.0, 0.0, 0.3, p, 1.0,  1.0, 
+         sx/2, -sy/2, -sz/2, 1.0, 0.3, 0.3, p, 1.0,  0.0, 
+        -sx/2, -sy/2, -sz/2, 0.2, 1.0, 0.3, p, -0.0, -0.0, 
+        -sx/2, -sy/2,  sz/2, 0.8, 0.2, 0.3, p, -0.0,  1.0, 
+         sx/2, -sy/2,  sz/2, 0.4, 0.9, 0.3, p, 1.0,  1.0, //노랑(위) 
+		   
+        -sx/2,  sy/2, -sz/2, 0.4, 0.1, 1.0, p, -0.0, -0.0, 
+         sx/2,  sy/2,  sz/2, 0.1, 0.3, 0.7, p, 1.0,  1.0, 
+         sx/2,  sy/2, -sz/2, 0.7, 0.9, 0.1, p, 1.0,  0.0, 
+        -sx/2,  sy/2, -sz/2, 0.2, 1.0, 0.7, p, -0.0, -0.0, 
+        -sx/2,  sy/2,  sz/2, 0.2, 0.9, 0.7, p, -0.0,  1.0, 
+         sx/2,  sy/2,  sz/2, 0.1, 1.0, 0.7, p, 1.0,  1.0 //연두(아래)
+];
+return vertexData;
+   }
 
 function initialiseBuffer() {
 
     gl.vertexBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, gl.vertexBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(creatPos(0.8, 0.8, 0.8, 0.7)), gl.STATIC_DRAW);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(createPos(sx,sy,sz,p)), gl.STATIC_DRAW);
 
 	var texture = gl.createTexture(); 
-	gl.bindTexture(gl.TEXTURE_2D, texture); 
-    //Asynchronously load an image 
+	gl.bindTexture(gl.TEXTURE_2D, texture);
+	// Fill the texture with a 1x1 red pixel.
+	const texData = new Uint8Array([255, 0, 0, 255, 0, 255, 0, 255, 0, 0, 255, 255, 255, 255, 0, 255]);
+	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 2, 2, 0, gl.RGBA, gl.UNSIGNED_BYTE, texData); 
+	//gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST_MIPMAP_NEAREST); // It is default
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.MIRRORED_REPEAT);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.MIRRORED_REPEAT);
+	// Asynchronously load an image
+	
 	var image = new Image();
-	image.src = "Ssong_image.jpg";
+	image.src = "Ssong_images.png";
 	image.addEventListener('load', function() {
 		// Now that the image has loaded make copy it to the texture.
 		gl.bindTexture(gl.TEXTURE_2D, texture);
 		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,gl.UNSIGNED_BYTE, image);
 		gl.generateMipmap(gl.TEXTURE_2D);
 		});
-
+	
     return testGLError("initialiseBuffers and texture initialize");
 }
 
@@ -134,7 +145,7 @@ function initialiseShaders() {
 				gl_Position = pMat * vMat * mMat * myVertex; \
 				gl_PointSize = 8.0; \
 				color = myColor; \
-				texCoord = myVertex.xy + 0.5; \
+				texCoord = myUV*3.0; \
 			}';
 
     gl.vertexShader = gl.createShader(gl.VERTEX_SHADER);
