@@ -145,7 +145,7 @@ function initialiseShaders() {
 				gl_Position = pMat * vMat * mMat * myVertex; \
 				gl_PointSize = 8.0; \
 				color = myColor; \
-				texCoord = myUV*3.0; \
+				texCoord = myUV; \
 			}';
 
     gl.vertexShader = gl.createShader(gl.VERTEX_SHADER);
